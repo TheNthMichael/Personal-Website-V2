@@ -6,11 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
     <link href="style.css" rel="stylesheet">
-    <script>
-        $(document).ready(function(){
-          $('[data-toggle="tooltip"]').tooltip();
-        });
-    </script>
     <title>Michael Nickerson | Portfolio</title>
 </head>
 <body>
@@ -57,35 +52,75 @@
                 </div>
             </div>
         </div>
-        <hr/>
-        <div id="about-me" class="container bg-light">
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="row">
-                        <h1>About Me</h1>
+        <div id="about-me" class="">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 py-4 bg-light ">
+                        <div class="row">
+                            <h1>About Me</h1>
+                        </div>
+                        <div class="row">
+                            <p>
+                                I am currently a student at the University of Massachusetts Lowell studying for a bachelors in Computer Science with a minor in Math and Robotics.
+                                My main interests are in Computer Vision, Robotics, Artificial Intelligence, Networking, and Hobby Level Electronics Projects.
+                                I like to spend my free time with friends, hiking, playing/modding video games, and working on whatever hobby project I'm currently invested in.
+                            </p>
+                        </div>
                     </div>
-                    <div class="row">
-                        <p>
-                            I am currently a student at the University of Massachusetts Lowell studying for a bachelors in Computer Science with a minor in Math and Robotics.
-                            My main interests are in Computer Vision, Robotics, Artificial Intelligence, Networking, and Hobby Level Electronics Projects.
-                            I like to spend my free time with friends, hiking, playing/modding video games, and working on whatever hobby project I'm currently invested in.
-                        </p>
+                    <div class="col-md-4 bg-dark py-4 text-light">
+                        <h1>Education</h1>
+                        <ul>
+                            <li>Expected Graduation Date: 5/13/2023</li>
+                            <li>Major in Computer Science</li>
+                            <li>Minor in Math and Robotics</li>
+                        </ul>
                     </div>
                 </div>
-                <div class="col-md-4 bg-dark text-light">
-                    <h1>Education</h1>
-                    <ul>
-                        <li>Expected Graduation Date: 5/13/2023</li>
-                        <li>Major in Computer Science</li>
-                        <li>Minor in Math and Robotics</li>
-                    </ul>
-                </div>
+                <p style="color: white;">I've redone this website 5 times, and typed the above probably 10 times :^(</p>
             </div>
-            <p style="color: white;">I've redone this website 5 times, and typed the above probably 10 times :^(</p>
         </div>
+            
 
         <div id="experience" class="container ">
-            <h1>Experience</h1>
+            <div class="row">
+                <h1>Experience</h1>
+            </div>
+            <div class="row">
+                <h3>Programming Languages</h3>
+                <p>
+                    I am fairly proficient with C, C++, .NET, Python, and Javascript. I have basic proficiency with go, pearl, and lisp however I learned both on the fly for small bits
+                    of work here and there. My language of choice for side projects is generally python.
+                    I learned C and C++ from university and made use of it during two Co-Ops at Teradyne while writing embedded code for some test instruments.
+                    I learned .NET while modding a game for a small community. The modding was done on a decompiled source that had already been passed down from
+                    two other developers and was my first experience working on a codebase large enough to push visual studio to take an unreasonable time for text searches.
+                    I also ended up using .NET at Teradyne which gave me more experience with the different versions of .NET, using the NuGet package manager, and writing more
+                    complex multithreaded code.
+
+                </p>
+                <h5>tl;dr</h5>
+                <b>Languages: Assembly, C, C++, .NET, Python, Javascript (HTML, CSS, Nodejs), golang, pearl, lisp</b>
+                <b>Frameworks/Software: React, Svelte, Ninject, Elastic Search, MongoDB, ClearCase, Git</b>
+                <h4>Frameworks</h4>
+                <p>
+                    I've made use of various Javascript frameworks so far and seem to have settled on using react and svelte for projects that require interactivity.
+                    For smaller projects such as this website, I avoid using javascript frameworks since there are few reusable components and almost no interactivity.
+                    I do however use bootstrap for basic styling and components because why bother googling "how to center a div" when I can use bootstrap and google
+                    "how to center a div in bootstrap" instead.
+                </p>
+            </div>
+            <div class="row">
+                <h3>Work Experience</h3>
+                <div class="row">
+                    <h5>Teradyne</h5>
+                </div>
+                <div class="row">
+                    <h5>UMass Lowell</h5>
+                </div>
+                <div class="row">
+                    <h5>EBSCO</h5>
+                </div>
+            </div>
+            
         </div>
 
         <div id="projects" class="container ">
@@ -98,5 +133,6 @@
         Other socials/contact info here.
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="scripts/scripts.js"></script>
 </body>
 </html>
