@@ -3,33 +3,42 @@ const reposRelativeUrl = "repos?perpage=100|egrep";
 const projectParent = document.getElementById("projectlist");
 const showMoreBtn = document.getElementById("showMore");
 let projects = [];
+let rawProjects = [];
+let languages = [];
+let rowsShown = 0;  // When filtering, show the amount of rows we already expanded.
 
 
 window.addEventListener('DOMContentLoaded', async (event) => {
 
-    let rawProjects = await GetRepoData(githubBaseUrl + reposRelativeUrl);
-    projects = SplitProjectsIntoPages(rawProjects, [], 3);
+    rawProjects = await GetRepoData(githubBaseUrl + reposRelativeUrl);
+    languages = GetLanguagesFromRepo(rawProjects);
 
-    showNextRow();
-    /*for (let i = 0; i < 10; i++) {
-        projectParent.appendChild(
-            CreateProjectCard({
-                demoLink: ""
-            })
-        );
-        await new Promise(r => setTimeout(r, 200));
-    }*/
+    projects = SplitProjectsIntoPages(rawProjects, [], 3);  // by default, no filtering should be applied.
+    await showNextRow();
+    removeAllProjects();
 });
+
+const removeAllProjects = () => {
+    // Delete all children of project section.
+    projectParent.replaceChildren();    // apparently a new way to remove/replace child elements.
+};
 
 const showNextRow = async () => {
     if (projects.length != 0) {
         let firstRow = projects.shift();
-        firstRow.forEach(async element => {
+
+        for (let i = 0; i < firstRow.length; i++) {
+            let element = firstRow[i];
             projectParent.appendChild(
                 CreateProjectCard(element)
             );
-            await new Promise(r => setTimeout(r, 100));
-        });
+            await new Promise(r => setTimeout(r, 200));
+        }
+
+        rowsShown += 1;
+        /*firstRow.forEach(async element => {
+            Could not use this for the effect due to async not awaited each iteration.
+        });*/
 
         if (projects.length === 0) {
             showMoreBtn.classList.add("d-none")
@@ -61,7 +70,7 @@ function sleep(ms) {
                 element.image = images[Math.floor(Math.random() * images.length)];
             }
             else {
-                element.image = "images/WesternEast.JPG";
+                element.image = "images/WesternEast.JPG";   // Pick a better "no image photo", maybe give a selection of photos to use.
             }
             element.title = element.name.replace(/-/g, " ");
             element.repoLink = element.html_url;
