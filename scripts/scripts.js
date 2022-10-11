@@ -1,11 +1,57 @@
 const githubBaseUrl = "https://api.github.com/users/thenthmichael/";
 const reposRelativeUrl = "repos?perpage=100|egrep";
+const projectParent = document.getElementById("projectlist");
+const showMoreBtn = document.getElementById("showMore");
+let projects = [];
 
+
+window.addEventListener('DOMContentLoaded', async (event) => {
+
+    let rawProjects = await GetRepoData(githubBaseUrl + reposRelativeUrl);
+    projects = SplitProjectsIntoPages(rawProjects, [], 3);
+
+    let firstRow = projects.shift();
+    firstRow.forEach(async element => {
+        projectParent.appendChild(
+            CreateProjectCard(element)
+        );
+        await new Promise(r => setTimeout(r, 200));
+    });
+    /*for (let i = 0; i < 10; i++) {
+        projectParent.appendChild(
+            CreateProjectCard({
+                demoLink: ""
+            })
+        );
+        await new Promise(r => setTimeout(r, 200));
+    }*/
+});
+
+const showNextRow = async () => {
+    if (projects.length != 0) {
+        let firstRow = projects.shift();
+        firstRow.forEach(async element => {
+            projectParent.appendChild(
+                CreateProjectCard(element)
+            );
+            await new Promise(r => setTimeout(r, 200));
+        });
+
+        if (projects.length === 0) {
+            showMoreBtn.classList.add("d-none")
+        }
+    }
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 /**
- * Returns a list of projects from the github api url.
+ * Get project data from github repo.
+ * Call on dom load to get the list, then create cards for these element.
  * @param {*} url The github api url to my users public repos.
- * @returns 
+ * @returns a list of projects from the github api url. 
  */
  const GetRepoData = async (url) => {
     try {
@@ -15,16 +61,17 @@ const reposRelativeUrl = "repos?perpage=100|egrep";
         && element.fork === false);
         results = results.map( (element) => {
 
-        // Check the homepage for links to images.
-        if (element.homepage != null) {
-            let images = element.homepage.split(';');
-            element.projectDisplayImage = images[Math.floor(Math.random() * images.length)];
-        }
-        else {
-            element.projectDisplayImage = "../../../assets/test.png";
-        }
-        element.name = element.name.replace(/-/g, " ");
-        return element
+            // Check the homepage for links to images.
+            if (element.homepage != null) {
+                let images = element.homepage.split(';');
+                element.image = images[Math.floor(Math.random() * images.length)];
+            }
+            else {
+                element.image = "images/WesternEast.JPG";
+            }
+            element.title = element.name.replace(/-/g, " ");
+            element.repoLink = element.html_url;
+            return element
         });
         
         return results;
@@ -77,3 +124,67 @@ const reposRelativeUrl = "repos?perpage=100|egrep";
     console.log(result);
     return result;
 };
+
+
+/**
+ * Example of why js frameworks are good.
+ * @param {*} element An object containing the project details.
+ * @returns A card element filled in with the project details.
+ */
+const CreateProjectCard = (element) => {
+
+    // Create the base element according to bootstrap card docs.
+    const cardParent = document.createElement("DIV");
+    cardParent.classList.add("card");
+    cardParent.classList.add("bg-light");
+    cardParent.classList.add("text-dark");
+    cardParent.classList.add("shadow");
+    cardParent.classList.add("p-3");
+    cardParent.classList.add("rounded");
+    // cardParent.classList.add("d-none");
+    cardParent.classList.add("m-4");
+    cardParent.style = "width: 18rem;";
+    cardParent.style.animation = "fade-in 3s";
+
+    const cardImage = document.createElement("IMG");
+    cardImage.src = element.image;
+    cardImage.classList.add("card-img-top");
+    cardImage.alt = "project image for " + element.title;
+
+    const cardBody = document.createElement("DIV");
+    cardBody.classList.add("card-body");
+
+    const cardTitle = document.createElement("H5");
+    cardTitle.classList.add("card-title");
+    cardTitle.textContent = element.title;
+
+    const cardDescription = document.createElement("P");
+    cardDescription.classList.add("card-text");
+    cardDescription.textContent = element.description;
+
+    const cardGithubLink = document.createElement("A");
+    cardGithubLink.classList.add("btn");
+    cardGithubLink.classList.add("btn-primary");
+    cardGithubLink.href = element.repoLink;
+    cardGithubLink.textContent = "View Code";
+
+    cardParent.appendChild(cardImage);
+    cardBody.appendChild(cardTitle);
+    cardBody.appendChild(cardDescription);
+    cardBody.appendChild(cardGithubLink);
+
+    // Certain elements may have some info indicating a web demo available, link here.
+    if (element.hasOwnProperty('demoLink')) {
+        const cardDemoLink = document.createElement("A");
+        cardDemoLink.classList.add("btn");
+        cardDemoLink.classList.add("btn-dark");
+        cardDemoLink.classList.add("mx-4");
+        cardDemoLink.href = element.demoLink;
+        cardDemoLink.textContent = "Demo";
+        cardBody.appendChild(cardDemoLink);
+    }
+
+    cardParent.appendChild(cardBody);
+    return cardParent;
+};
+
