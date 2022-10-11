@@ -10,13 +10,7 @@ window.addEventListener('DOMContentLoaded', async (event) => {
     let rawProjects = await GetRepoData(githubBaseUrl + reposRelativeUrl);
     projects = SplitProjectsIntoPages(rawProjects, [], 3);
 
-    let firstRow = projects.shift();
-    firstRow.forEach(async element => {
-        projectParent.appendChild(
-            CreateProjectCard(element)
-        );
-        await new Promise(r => setTimeout(r, 200));
-    });
+    showNextRow();
     /*for (let i = 0; i < 10; i++) {
         projectParent.appendChild(
             CreateProjectCard({
@@ -34,7 +28,7 @@ const showNextRow = async () => {
             projectParent.appendChild(
                 CreateProjectCard(element)
             );
-            await new Promise(r => setTimeout(r, 200));
+            await new Promise(r => setTimeout(r, 100));
         });
 
         if (projects.length === 0) {
