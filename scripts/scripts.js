@@ -11,6 +11,11 @@ let languages = [];
 let currentFilter = new Set();
 let rowsShown = 0;  // When filtering, show the amount of rows we already expanded.
 
+const topicsTracked = [
+    "portfolio",
+    "demo"
+]
+
 /**
  * On load, populate projects and set up event listeners.
  */
@@ -120,6 +125,21 @@ const showNextRow = async (doIncrement = true) => {
 }
 
 /**
+ * Determine if array a contains at least one element from array b.
+ * @param {*} a The array to check.
+ * @param {*} b The array containing the elements to check.
+ * @returns true if a contains at least one element of b, false otherwise.
+ */
+const listContainsAtLeastOne = (a, b) => {
+    for (let i = 0; i < b.length; i++) {
+        if (a.includes(b[i])) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
  * Get project data from github repo.
  * Call on dom load to get the list, then create cards for these element.
  * @param {*} url The github api url to my users public repos.
@@ -130,7 +150,8 @@ const showNextRow = async (doIncrement = true) => {
         const response = await fetch(url, { mode: 'cors'});
         var results = await response.json();
         results = results.filter(element => element.owner.login.toLowerCase() === "thenthmichael"
-        && element.fork === false);
+        && element.fork === false
+        && listContainsAtLeastOne(element.topics, topicsTracked));
         results = results.map( (element) => {
 
             // Check the homepage for links to images.
