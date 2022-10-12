@@ -1,29 +1,101 @@
 const githubBaseUrl = "https://api.github.com/users/thenthmichael/";
 const reposRelativeUrl = "repos?perpage=100|egrep";
 const projectParent = document.getElementById("projectlist");
+const projectFilters = document.getElementById("projectfilters");
 const showMoreBtn = document.getElementById("showMore");
+let ShowAllFilter = null;
+let LanguageFilters = [];
 let projects = [];
 let rawProjects = [];
 let languages = [];
+let currentFilter = new Set();
 let rowsShown = 0;  // When filtering, show the amount of rows we already expanded.
 
-
+/**
+ * On load, populate projects and set up event listeners.
+ */
 window.addEventListener('DOMContentLoaded', async (event) => {
 
     rawProjects = await GetRepoData(githubBaseUrl + reposRelativeUrl);
     languages = GetLanguagesFromRepo(rawProjects);
 
+    // Create the show all checkbox.
+    let showAllFilterTemp = CreateLanguageFilter("Show All", CreateUniqueId(), (event) => {
+        if (event.currentTarget.checked) {
+            // Refresh projects with new filters.
+            currentFilter.add("Show All");
+        } else {
+            currentFilter.delete("Show All");
+        }
+
+        // Refresh projects with new filters.
+        refreshAndFilterProjects(Array.from(currentFilter)); 
+    });
+
+    projectFilters.appendChild(showAllFilterTemp);
+    showAllFilter = showAllFilterTemp;
+
+    languages.forEach(element => {
+        let lfilter = CreateLanguageFilter(element, CreateUniqueId(), (event) => {
+            if (event.currentTarget.checked) {
+                // Disable all other filters.
+                currentFilter.add(element);
+            } else {
+                // Re-enable all other filters.
+                currentFilter.delete(element);
+            }
+    
+            // Refresh projects with new filters.
+            refreshAndFilterProjects(Array.from(currentFilter));    
+        });
+
+        projectFilters.appendChild(lfilter);
+    });
+
     projects = SplitProjectsIntoPages(rawProjects, [], 3);  // by default, no filtering should be applied.
     await showNextRow();
-    removeAllProjects();
 });
 
+/**
+ * Removes all projects, applies the filter, then repopulates the page.
+ * Could likely make this more efficient by hiding the elements instead of deleting them.
+ * @param {*} filter The filter to apply to the project list. (an array of language names)
+ */
+const refreshAndFilterProjects = (filter) => {
+    removeAllProjects();
+    projects = SplitProjectsIntoPages(rawProjects, filter, 3);
+
+    if (projects.length === 0) {
+        projectParent.textContent = "Nothing to see here...";
+        if (!projects.includes("d-none")) {
+            showMoreBtn.classList.add("d-none");
+        }
+    } else {
+        projectParent.textContent = "";
+        if (projects.includes("d-none")) {
+            showMoreBtn.classList.remove("d-none");
+        }
+    }
+
+    for (let i = 0; i < rowsShown; i++) {
+        showNextRow(false);
+    }
+ }
+
+ /**
+  * Remove all project cards from the project parent element.
+  */
 const removeAllProjects = () => {
     // Delete all children of project section.
     projectParent.replaceChildren();    // apparently a new way to remove/replace child elements.
 };
 
-const showNextRow = async () => {
+
+/**
+ * Show the next row of projects
+ * @param {*} doIncrement whether or not the user pressed show more.
+ */
+const showNextRow = async (doIncrement = true) => {
     if (projects.length != 0) {
         let firstRow = projects.shift();
 
@@ -35,19 +107,16 @@ const showNextRow = async () => {
             await new Promise(r => setTimeout(r, 200));
         }
 
-        rowsShown += 1;
-        /*firstRow.forEach(async element => {
-            Could not use this for the effect due to async not awaited each iteration.
-        });*/
+        if (doIncrement) {
+            rowsShown += 1;
+        }
 
-        if (projects.length === 0) {
-            showMoreBtn.classList.add("d-none")
+        if (projects.length === 0 && !projects.includes("d-none")) {
+            showMoreBtn.classList.add("d-none");
+        } else {
+            showMoreBtn.classList.remove("d-none");
         }
     }
-}
-
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 /**
@@ -70,7 +139,7 @@ function sleep(ms) {
                 element.image = images[Math.floor(Math.random() * images.length)];
             }
             else {
-                element.image = "images/WesternEast.JPG";   // Pick a better "no image photo", maybe give a selection of photos to use.
+                element.image = `images/ImageMissing${GetRandomInt(1,2)}.png`;   // Pick a better "no image photo", maybe give a selection of photos to use.
             }
             element.title = element.name.replace(/-/g, " ");
             element.repoLink = element.html_url;
@@ -104,7 +173,7 @@ function sleep(ms) {
     });
 
     // Add this to the top since these will become buttons that when pressed send their name to a function.
-    languages.unshift("Show All");
+    // languages.unshift("Show All");
 
     return languages;
 }
@@ -118,7 +187,7 @@ function sleep(ms) {
  * @returns An array of arrays where each inner array contains at most elementsPerPage of projects.
  */
  const SplitProjectsIntoPages = (allElements, languageFilter, elementsPerPage) => {
-    let filteredElements = allElements.filter( (e) => languageFilter.includes(e.language) || languageFilter.length === 0);
+    let filteredElements = allElements.filter( (e) => languageFilter.includes(e.language) || languageFilter.length === 0 || languageFilter.includes("Show All"));
     let result = [];
     for (let i = 0; i < filteredElements.length; i += elementsPerPage) {
         result.push(filteredElements.slice(i, i + elementsPerPage));
@@ -131,6 +200,7 @@ function sleep(ms) {
 
 /**
  * Example of why js frameworks are good.
+ * Creates a card element according to the bootstrap docs.
  * @param {*} element An object containing the project details.
  * @returns A card element filled in with the project details.
  */
@@ -153,6 +223,10 @@ const CreateProjectCard = (element) => {
     cardImage.src = element.image;
     cardImage.classList.add("card-img-top");
     cardImage.alt = "project image for " + element.title;
+    cardImage.onerror = () => {
+        cardImage.onerror=null;
+        cardImage.src=`images/ImageMissing${GetRandomInt(1,2)}.png`;
+    };
 
     const cardBody = document.createElement("DIV");
     cardBody.classList.add("card-body");
@@ -191,3 +265,61 @@ const CreateProjectCard = (element) => {
     return cardParent;
 };
 
+
+/**
+ * Example of why js frameworks are good part 2.
+ * Creates an inline checkbox element according to the bootstrap docs.
+ * @param {*} language A string containing the language this filter represents.
+ * @param {*} id A unique id for the given element.
+ * @param {*} onchange A function for the event listener attached to the checkbox.
+ * @returns An inline checkbox element.
+ */
+const CreateLanguageFilter = (language, id, onchange) => {
+    // Create the base element according to bootstrap checkbox docs.
+    const checkboxForm = document.createElement("DIV");
+    checkboxForm.classList.add("form-check");
+    checkboxForm.classList.add("form-check-inline");
+    checkboxForm.style.animation = "fade-in 1s";
+
+    // Create the checkbox
+    const checkboxBox = document.createElement("input");
+    checkboxBox.classList.add("form-check-input");
+    checkboxBox.type = "checkbox";
+    checkboxBox.id = id;
+    checkboxBox.value = language;
+    checkboxBox.style.animation = "fade-in 1s";
+    checkboxBox.addEventListener('change', onchange);
+
+    // Create the label
+    const checkboxLabel = document.createElement("label");
+    checkboxLabel.classList.add("form-check-label");
+    checkboxLabel.for = id;
+    checkboxLabel.textContent = language;
+
+    checkboxForm.appendChild(checkboxBox);
+    checkboxForm.appendChild(checkboxLabel);
+
+    return checkboxForm;
+};
+
+/**
+ * Creates a semi-unique id as long as I avoid the format preamble\d+
+ */
+let preamble = "ThisIdShouldNotBeUsed";
+let index = 0;
+const CreateUniqueId = () => {
+    index += 1;
+    return `${preamble}${index}`;
+}
+
+/**
+ * Double inclusive random int function.
+ * @param {*} min The min value to include in the range.
+ * @param {*} max The max value to include in the range.
+ * @returns A random number between min and max inclusive.
+ */
+function GetRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
+}

@@ -81,7 +81,7 @@
         </div>
             
 
-        <div id="experience" class="container ">
+        <div id="experience" class="container bg-light">
             <div class="row">
                 <h1>Experience</h1>
             </div>
@@ -95,11 +95,7 @@
                     two other developers and was my first experience working on a codebase large enough to push visual studio to take an unreasonable time for text searches.
                     I also ended up using .NET at Teradyne which gave me more experience with the different versions of .NET, using the NuGet package manager, and writing more
                     complex multithreaded code.
-
                 </p>
-                <h5>tl;dr</h5>
-                <b>Languages: Assembly, C, C++, .NET, Python, Javascript (HTML, CSS, Nodejs), golang, pearl, lisp</b>
-                <b>Frameworks/Software: React, Svelte, Ninject, Elastic Search, MongoDB, ClearCase, Git</b>
                 <h4>Frameworks</h4>
                 <p>
                     I've made use of various Javascript frameworks so far and seem to have settled on using react and svelte for projects that require interactivity.
@@ -107,17 +103,44 @@
                     I do however use bootstrap for basic styling and components because why bother googling "how to center a div" when I can use bootstrap and google
                     "how to center a div in bootstrap" instead.
                 </p>
+                <div class="bg-dark text-light py-3">
+                    <h5>tl;dr</h5>
+                    <p><b>Languages:</b> <em>Assembly, C, C++, .NET, Python, Javascript (HTML, CSS, Nodejs), golang, pearl, lisp</em></p>
+                    
+                    <p><b>Frameworks/Software:</b> <em>React, Svelte, Ninject, Elastic Search, MongoDB, ClearCase, Git</em></p>
+                    
+                </div>
             </div>
+
             <div class="row">
                 <h3>Work Experience</h3>
-                <div class="row">
+                <div class="row pt-1 pb-4">
                     <h5>Teradyne</h5>
+                    <i>Software Engineer Co-Op, 2021-2022</i>
+                    <ul class="list-group ullist">
+                        <li class="">Worked on IGXL, fixed bugs in the .NET codebase that were reported through JIRA.</li>
+                        <li class="">Wrote embedded C++ code in linux for a feature on the tester instruments.</li>
+                        <li class="">Made an internal tool for DevOps using .NET, Nodejs, Pearl, Elastic Search, and Kibana that visualizes code complexity from a clearcase stream.</li>
+                        <li class="">Worked on network performance test code on linux using different methods for a high bandwidth network.</li>
+                    </ul>
                 </div>
-                <div class="row">
+
+                <div class="row pt-1 pb-4">
                     <h5>UMass Lowell</h5>
+                    <i>IT Assistant, 2019-2021</i>
+                    <ul class="list-group ullist">
+                        <li class="">Fixed broken computers, updated software, and installed new hardware.</li>
+                        <li class="">Used troubleshooting skills to find an issue with a laptop that had an unfinished uninstall of dual boot Linux.</li>
+                    </ul>
                 </div>
-                <div class="row">
+
+                <div class="row pt-1 pb-4">
                     <h5>EBSCO</h5>
+                    <i>Office Intern, 2018-2019</i>
+                    <ul class="list-group ullist">
+                        <li class="">Wrote a set of visual basic macros to automate the cleanup, filtering, and transformation of data that handled a repetative task. Also added a button to automatically email the results.</li>
+                        <li class="">Added captions and edited customer training videos.</li>
+                    </ul>
                 </div>
             </div>
             
@@ -126,22 +149,12 @@
         <div id="projects" class="container bg-light p-4">
             <h1>Projects <span class="d-inline-block" data-toggle="tooltip" data-placement="right" title="Populated with Github API"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16"><path fill-rule="evenodd" d="M8 1.5a6.5 6.5 0 100 13 6.5 6.5 0 000-13zM0 8a8 8 0 1116 0A8 8 0 010 8zm9 3a1 1 0 11-2 0 1 1 0 012 0zM6.92 6.085c.081-.16.19-.299.34-.398.145-.097.371-.187.74-.187.28 0 .553.087.738.225A.613.613 0 019 6.25c0 .177-.04.264-.077.318a.956.956 0 01-.277.245c-.076.051-.158.1-.258.161l-.007.004a7.728 7.728 0 00-.313.195 2.416 2.416 0 00-.692.661.75.75 0 001.248.832.956.956 0 01.276-.245 6.3 6.3 0 01.26-.16l.006-.004c.093-.057.204-.123.313-.195.222-.149.487-.355.692-.662.214-.32.329-.702.329-1.15 0-.76-.36-1.348-.863-1.725A2.76 2.76 0 008 4c-.631 0-1.155.16-1.572.438-.413.276-.68.638-.849.977a.75.75 0 101.342.67z"></path></svg></span></h1>
             <div class="container">
-                    <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="option1">
-                        <label class="form-check-label" for="inlineCheckbox1">1</label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox2" value="option2">
-                        <label class="form-check-label" for="inlineCheckbox2">2</label>
-                      </div>
-                      <div class="form-check form-check-inline">
-                        <input class="form-check-input" type="checkbox" id="inlineCheckbox3" value="option3" disabled>
-                        <label class="form-check-label" for="inlineCheckbox3">3 (disabled)</label>
-                      </div>
-                    <!--Project Language Filters Here-->
+                    <div id="projectfilters" class="">
+                        <!--Project Language Filters Here-->
+                    </div>
 
                 <div id="projectlist" class="row row-cols-2 justify-content-center">
-                    <!--PROJECTS INSERTED DYNAMICALLY HERE-->
+                    <!--Project Cards Inserted Here-->
                 </div>
                 <div class="d-flex justify-content-evenly">
                     <div id="showMore" class="btn btn-secondary" onclick="showNextRow();">Show More...</div>
@@ -150,9 +163,20 @@
         </div>
 
     </main>
-
-    <footer>
-        Other socials/contact info here.
+    <footer id="contact-me" class="bg-dark text-light py-4">
+        <div class="container">
+            <div class="d-flex  justify-content-center">
+                <div class="px-lg-4 px-md-2 px-sm-1">
+                    <a href="https://github.com/TheNthMichael" class="nav-link text-light">Github</a>
+                </div>
+                <div class="px-lg-4 px-md-2 px-sm-1">
+                    <a href="https://www.linkedin.com/in/michaelryannickerson/" class="nav-link text-light">LinkedIn</a>
+                </div>
+                <div class="px-lg-4 px-md-2 px-sm-1">
+                    <a href="resources/resume.pdf" class="nav-link text-light">Resume</a>
+                </div> 
+            </div>
+        </div>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script src="scripts/scripts.js"></script>
