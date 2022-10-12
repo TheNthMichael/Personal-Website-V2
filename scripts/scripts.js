@@ -143,6 +143,9 @@ const showNextRow = async (doIncrement = true) => {
             }
             element.title = element.name.replace(/-/g, " ");
             element.repoLink = element.html_url;
+            if (element.has_pages) {
+                element.demo = "https://" + element.owner.login + ".github.io/" + element.name;
+            }
             return element
         });
         
@@ -193,7 +196,6 @@ const showNextRow = async (doIncrement = true) => {
         result.push(filteredElements.slice(i, i + elementsPerPage));
     }
 
-    console.log(result);
     return result;
 };
 
@@ -251,12 +253,12 @@ const CreateProjectCard = (element) => {
     cardBody.appendChild(cardGithubLink);
 
     // Certain elements may have some info indicating a web demo available, link here.
-    if (element.hasOwnProperty('demoLink')) {
+    if (element.hasOwnProperty('demo')) {
         const cardDemoLink = document.createElement("A");
         cardDemoLink.classList.add("btn");
         cardDemoLink.classList.add("btn-dark");
         cardDemoLink.classList.add("mx-4");
-        cardDemoLink.href = element.demoLink;
+        cardDemoLink.href = element.demo;
         cardDemoLink.textContent = "Demo";
         cardBody.appendChild(cardDemoLink);
     }
